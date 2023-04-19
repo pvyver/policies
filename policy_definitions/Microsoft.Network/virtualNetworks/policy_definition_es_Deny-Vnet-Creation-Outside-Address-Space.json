@@ -1,0 +1,78 @@
+{
+  "name": "Deny-Vnet-Creation-Outside-Address-Space",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2021-06-01",
+  "scope": null,
+  "properties": {
+    "policyType": "Custom",
+    "mode": "All",
+    "displayName": "Deny Vnet Creation Outside Address Space",
+    "description": "This policy denies the VNet creation with an address space that is outside the defined range",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Network",
+      "source": "https://github.com/Azure/Enterprise-Scale/",
+      "alzCloudEnvironments": [
+        "AzureCloud",
+        "AzureChinaCloud",
+        "AzureUSGovernment"
+      ]
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "description": "The effect for this policy to take. e.g. Audit",
+          "displayName": "Effect"
+        },
+        "allowedValues": [
+          "Deny",
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "location",
+                "equals": "westeurope"
+              },
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks"
+              },
+              {
+                "field": "Microsoft.Network/virtualNetworks/addressSpace.addressPrefixes[*]",
+                "notContains": "10.88."
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "location",
+                "equals": "northeurope"
+              },
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks"
+              },
+              {
+                "field": "Microsoft.Network/virtualNetworks/addressSpace.addressPrefixes[*]",
+                "notContains": "10.80."
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

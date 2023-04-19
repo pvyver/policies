@@ -1,0 +1,64 @@
+{
+  "name": "Deny-PublicIP-Outside-Address-Space",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2021-06-01",
+  "scope": null,
+  "properties": {
+    "policyType": "Custom",
+    "mode": "All",
+    "displayName": "Deny Public IP Outside Address Space",
+    "description": "This policy denies the Public IP creation with an IP address that is outside the defined range",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Network",
+      "source": "https://github.com/Azure/Enterprise-Scale/",
+      "alzCloudEnvironments": [
+        "AzureCloud",
+        "AzureChinaCloud",
+        "AzureUSGovernment"
+      ]
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "description": "The effect for this policy to take. e.g. Audit",
+          "displayName": "Effect"
+        },
+        "allowedValues": [
+          "Deny",
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      },
+      "ipAddressPrefixes": {
+        "type": "array",
+        "metadata": {
+          "description": "The list of allowed public IP prefixes",
+          "displayName": "Allowed public IP prefixes"
+        },
+        "defaultValue": [
+          "123.123.123"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/publicIpAddresses"
+          },
+          {
+            "field": "Microsoft.Network/publicIpAddresses/ipAddress",
+            "notin": "[parameters('ipAddressPrefixes')]"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

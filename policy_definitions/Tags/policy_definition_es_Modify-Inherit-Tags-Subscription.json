@@ -1,0 +1,229 @@
+{
+  "name": "Modify-Inherit-Tags-Subscription",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2021-06-01",
+  "scope": null,
+  "properties": {
+    "policyType": "Custom",
+    "displayName": "Inherit tags from subscription",
+    "description": "This policy inherits the following tags from a subscription: app-owner, app-environment, app-name, org-entity, unit",
+    "metadata": {
+      "category": "Governance",
+      "version": "1.0.0",
+      "preview": false,
+      "depreciated": false
+    },
+    "mode": "All",
+    "parameters": {
+      "app-environment-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "App Environment Tag",
+          "description": "List of possible environments"
+        },
+        "defaultValue": "ep.app-environment"
+      },
+      "app-name-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "App Name Tag"
+        },
+        "defaultValue": "app-name"
+      },
+      "app-owner-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "App owner Tag"
+        },
+        "defaultValue": "app-owner"
+      },
+      "app-responsible-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "App Responsible Tag"
+        },
+        "defaultValue": "app-responsible"
+      },
+      "central-budget-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Central Budget Tag"
+        },
+        "defaultValue": "central-budget"
+      },
+      "license-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "License Tag"
+        },
+        "defaultValue": "license"
+      },
+      "org-entity-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Org Entity Tag"
+        },
+        "defaultValue": "org-entity"
+      },
+      "unit-tag": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Unit Tag"
+        },
+        "defaultValue": "unit"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('app-environment-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('app-environment-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('app-environment-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('app-name-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('app-name-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('app-name-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('app-owner-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('app-owner-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('app-owner-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('app-responsible-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('app-responsible-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('app-responsible-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('central-budget-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('central-budget-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('central-budget-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('license-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('license-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('license-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('org-entity-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('org-entity-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('org-entity-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "[concat('tags[', parameters('unit-tag'), ']')]",
+                "notEquals": "[subscription().tags[parameters('unit-tag')]]"
+              },
+              {
+                "value": "[subscription().tags[parameters('unit-tag')]]",
+                "notEquals": ""
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "modify",
+        "details": {
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "operations": [
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('app-environment-tag'), ']')]",
+              "value": "[subscription().tags[parameters('app-environment-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('app-name-tag'), ']')]",
+              "value": "[subscription().tags[parameters('app-name-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('app-owner-tag'), ']')]",
+              "value": "[subscription().tags[parameters('app-owner-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('app-responsible-tag'), ']')]",
+              "value": "[subscription().tags[parameters('app-responsible-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('central-budget-tag'), ']')]",
+              "value": "[subscription().tags[parameters('central-budget-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('license-tag'), ']')]",
+              "value": "[subscription().tags[parameters('license-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('org-entity-tag'), ']')]",
+              "value": "[subscription().tags[parameters('org-entity-tag')]]"
+            },
+            {
+              "operation": "addOrReplace",
+              "field": "[concat('tags[', parameters('unit-tag'), ']')]",
+              "value": "[subscription().tags[parameters('unit-tag')]]"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Deny-Custom-DNS-Servers-VNet",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2021-06-01",
+  "scope": null,
+  "properties": {
+    "policyType": "Custom",
+    "mode": "All",
+    "displayName": "Deny the configuration of Custom DNS Servers VNet",
+    "description": "This policy denies the configuration of custom DNS servers for a VNet",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Network",
+      "source": "https://github.com/Azure/Enterprise-Scale/",
+      "alzCloudEnvironments": [
+        "AzureCloud",
+        "AzureChinaCloud",
+        "AzureUSGovernment"
+      ]
+    },
+    "Parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "description": "The effect for this policy to take. e.g. Audit",
+          "displayName": "Effect"
+        },
+        "allowedValues": [
+          "Deny",
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      }
+    },
+    "PolicyRule": {
+      "if": {
+        "AllOf": [
+          {
+            "equals": "Microsoft.Network/virtualNetworks",
+            "field": "type"
+          },
+          {
+            "allOf": [
+              {
+                "exists": true,
+                "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers[*]"
+              },
+              {
+                "count": {
+                  "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers[*]"
+                },
+                "greater": 0
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}
